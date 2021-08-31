@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#62A8A1"
     tools:context=".EditActivity">
 
     <LinearLayout
@@ -111,9 +112,8 @@
     <LinearLayout
         android:id="@+id/phoneNumberInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/filterInputLayout"
-        android:background="#62A8A1"
         android:orientation="vertical"
         android:padding="15dp">
 

@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/filtersTitle"
             android:layout_marginTop="12dp"
-            android:text="95588  |  测试"
+            android:text="转发所有信息"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -52,7 +52,7 @@
             android:layout_below="@id/transferTitle"
             android:layout_marginTop="12dp"
             android:gravity="right"
-            android:text="186****0099"
+            android:text="无转发人"
             android:textColor="@color/white"
             android:textSize="16sp" />
 

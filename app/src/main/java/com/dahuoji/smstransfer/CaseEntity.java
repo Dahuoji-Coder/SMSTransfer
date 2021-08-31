@@ -10,6 +10,7 @@ public class CaseEntity implements Serializable {
     private Contact contact1;
     private Contact contact2;
     private boolean showButtons;
+    private int color;
 
     public String getId() {
         return id;
@@ -65,5 +66,13 @@ public class CaseEntity implements Serializable {
 
     public void setShowButtons(boolean showButtons) {
         this.showButtons = showButtons;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }

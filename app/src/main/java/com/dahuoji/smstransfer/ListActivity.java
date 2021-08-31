@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.dahuoji.smstransfer.database.DBUtil;
+import com.gyf.cactus.Cactus;
+import com.gyf.cactus.callback.CactusCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +44,29 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onButtonDeleteClicked(CaseEntity caseEntity) {
                 DBUtil.getInstance(ListActivity.this).deleteData(EditActivity.Table_Name, EditActivity.Column_ID + "=?", new String[]{caseEntity.getId()});
-                onResume();
+                caseList.remove(caseEntity);
+                caseAdapter.notifyDataSetChanged();
             }
         });
         boardRecyclerview.setAdapter(caseAdapter);
+        boardRecyclerview.addItemDecoration(new CaseItemDecoration());
+        //注意:需要打开自启动
+        Cactus.getInstance()
+                .isDebug(true)
+                .setTitle("短信转发")
+                .setContent("请放心使用")
+                .addCallback(new CactusCallback() {
+                    @Override
+                    public void doWork(int i) {
+
+                    }
+
+                    @Override
+                    public void onStop() {
+
+                    }
+                })
+                .register(this);
     }
 
     @Override
@@ -79,6 +100,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 if (!TextUtils.isEmpty(forward_contact_2) && forward_contact_2.contains(",")) {
                     caseEntity.setContact2(new Contact(forward_contact_2.split(",")[0], forward_contact_2.split(",")[1]));
                 }
+                caseEntity.setColor(BoardAdapter.colors3[caseList.size() % BoardAdapter.colors3.length]);
                 caseList.add(caseEntity);
             }
         }

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TransmitReceiver extends BroadcastReceiver {
     @Override
@@ -54,7 +56,9 @@ public class TransmitReceiver extends BroadcastReceiver {
     }
 
     public void transmitMessageTo(String phoneNumber, String message) {
+        phoneNumber = formatPhoneNum(phoneNumber);
         //使用sendMultipartTextMessage()方法发送超长短信，这种方式也是发送多条短信，不过用户收到的短信会连在一起显示一整条。
+        Log.d(">>>Transfer", "number : " + phoneNumber + ", message : " + message);
         SmsManager sms = SmsManager.getDefault();
         if (message.length() > 70) {
             ArrayList<String> msgs = sms.divideMessage(message);
@@ -62,6 +66,16 @@ public class TransmitReceiver extends BroadcastReceiver {
         } else {
             sms.sendTextMessage(phoneNumber, null, message, null, null);
         }
+    }
+
+    /**
+     * 去掉手机号内除数字外的所有字符
+     */
+    private String formatPhoneNum(String phoneNum) {
+        String regex = "(\\+86)|[^0-9]";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNum);
+        return matcher.replaceAll("");
     }
 }
 

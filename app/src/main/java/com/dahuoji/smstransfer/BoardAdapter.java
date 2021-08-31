@@ -26,9 +26,9 @@ public class BoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private final Context context;
     private final List<CaseEntity> caseList;
-    private final int[] colors1 = new int[]{Color.parseColor("#F2CDCB"), Color.parseColor("#6C6C8C"), Color.parseColor("#62A8A1"), Color.parseColor("#81D1DD")};
-    private final int[] colors2 = new int[]{Color.parseColor("#EDC382"), Color.parseColor("#355B94"), Color.parseColor("#C3CBD2"), Color.parseColor("#AA3B45")};
-    private final int[] colors3 = new int[]{Color.parseColor("#44435F"), Color.parseColor("#B3B4B7"), Color.parseColor("#505F99"), Color.parseColor("#7396D1")};
+    public static final int[] colors1 = new int[]{Color.parseColor("#F2CDCB"), Color.parseColor("#6C6C8C"), Color.parseColor("#62A8A1"), Color.parseColor("#81D1DD")};
+    public static final int[] colors2 = new int[]{Color.parseColor("#EDC382"), Color.parseColor("#355B94"), Color.parseColor("#C3CBD2"), Color.parseColor("#AA3B45")};
+    public static final int[] colors3 = new int[]{Color.parseColor("#44435F"), Color.parseColor("#B3B4B7"), Color.parseColor("#505F99"), Color.parseColor("#7396D1")};
 
     public BoardAdapter(Context context, List<CaseEntity> caseList) {
         this.context = context;
@@ -83,7 +83,7 @@ public class BoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((BoardViewHolder) holder).itemBoardRoot.setClipToOutline(true);
         }
-        ((BoardViewHolder) holder).contentLayout.setBackgroundColor(colors3[position % 4]);
+        ((BoardViewHolder) holder).contentLayout.setBackgroundColor(caseEntity.getColor());
         RecyclerView.@NotNull ViewHolder finalHolder = holder;
         ((BoardViewHolder) holder).contentLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
