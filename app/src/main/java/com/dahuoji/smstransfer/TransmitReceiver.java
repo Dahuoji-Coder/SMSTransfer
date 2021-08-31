@@ -13,6 +13,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class TransmitReceiver extends BroadcastReceiver {
@@ -33,14 +34,20 @@ public class TransmitReceiver extends BroadcastReceiver {
                 String message = msg.getDisplayMessageBody();
                 messageBuilder.append(message);
             }
-            //工商银行 "95588"
-            if (!TextUtils.isEmpty(number) && "95588".equals(number)) {
-                Log.i("noco", messageBuilder.toString());
-                String transmitNunmber = MainActivity.getSettingNote(context, "number");
-                if (transmitNunmber.equals("")) {//第一次安装软件时，在没有设置转发号码的时候不转发
-
-                } else {//添加了号码
-                    transmitMessageTo(transmitNunmber, messageBuilder.toString());
+            //过滤并转发消息
+            List<CaseEntity> caseList = ListActivity.getCaseList(context);
+            for (int i = 0; i < caseList.size(); i++) {
+                CaseEntity caseEntity = caseList.get(i);
+                if ((TextUtils.isEmpty(caseEntity.getFiltersPhoneNumber()) || caseEntity.getFiltersPhoneNumber().equals(number)) &&
+                        (TextUtils.isEmpty(caseEntity.getFiltersKeyword1()) || messageBuilder.toString().contains(caseEntity.getFiltersKeyword1())) &&
+                        (TextUtils.isEmpty(caseEntity.getFiltersKeyword2()) || messageBuilder.toString().contains(caseEntity.getFiltersKeyword2()))
+                ) {
+                    if (caseEntity.getContact1() != null) {
+                        transmitMessageTo(caseEntity.getContact1().getPhoneNumber(), messageBuilder.toString());
+                    }
+                    if (caseEntity.getContact2() != null) {
+                        transmitMessageTo(caseEntity.getContact2().getPhoneNumber(), messageBuilder.toString());
+                    }
                 }
             }
         }
