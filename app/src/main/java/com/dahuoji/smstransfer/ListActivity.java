@@ -4,15 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.dahuoji.smstransfer.database.DBUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private List<CaseEntity> caseList;
+    private BoardAdapter caseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,18 +29,66 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.floatingActionButton).setOnClickListener(this);
         RecyclerView boardRecyclerview = findViewById(R.id.boardRecyclerView);
         boardRecyclerview.setLayoutManager(new LinearLayoutManager(this));
+        caseList = new ArrayList<>();
+        caseAdapter = new BoardAdapter(this, caseList);
+        caseAdapter.setOnBoardEventListener(new BoardAdapter.OnBoardEventListener() {
+            @Override
+            public void onButtonEditClicked(CaseEntity caseEntity) {
+                Intent intent = new Intent(ListActivity.this, EditActivity.class);
+                intent.putExtra("case_entity", caseEntity);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onButtonDeleteClicked(CaseEntity caseEntity) {
+                DBUtil.getInstance(ListActivity.this).deleteData(EditActivity.Table_Name, EditActivity.Column_ID + "=?", new String[]{caseEntity.getId()});
+                onResume();
+            }
+        });
+        boardRecyclerview.setAdapter(caseAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        caseList.clear();
+        caseList.addAll(getCaseList(this));
+        caseAdapter.notifyDataSetChanged();
+    }
+
+    public static List<CaseEntity> getCaseList(Context context) {
         List<CaseEntity> caseList = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            caseList.add(new CaseEntity());
+        DBUtil dbUtil = DBUtil.getInstance(context);
+        if (dbUtil.isExists(EditActivity.Table_Name)) {
+            Cursor cursor = dbUtil.queryData(EditActivity.Table_Name, null, null, null, null, null, null, null);
+            while (cursor.moveToNext()) {
+                String _id = cursor.getString(cursor.getColumnIndex(EditActivity.Column_ID));
+                String filters_phone_number = cursor.getString(cursor.getColumnIndex(EditActivity.Column_Filters_Phone_Number));
+                String filters_keyword_1 = cursor.getString(cursor.getColumnIndex(EditActivity.Column_Filters_Keyword_1));
+                String filters_keyword_2 = cursor.getString(cursor.getColumnIndex(EditActivity.Column_Filters_Keyword_2));
+                String forward_contact_1 = cursor.getString(cursor.getColumnIndex(EditActivity.Column_Forward_Contact_1));
+                String forward_contact_2 = cursor.getString(cursor.getColumnIndex(EditActivity.Column_Forward_Contact_2));
+                CaseEntity caseEntity = new CaseEntity();
+                caseEntity.setId(_id);
+                caseEntity.setFiltersPhoneNumber(filters_phone_number);
+                caseEntity.setFiltersKeyword1(filters_keyword_1);
+                caseEntity.setFiltersKeyword2(filters_keyword_2);
+                if (!TextUtils.isEmpty(forward_contact_1) && forward_contact_1.contains(",")) {
+                    caseEntity.setContact1(new Contact(forward_contact_1.split(",")[0], forward_contact_1.split(",")[1]));
+                }
+                if (!TextUtils.isEmpty(forward_contact_2) && forward_contact_2.contains(",")) {
+                    caseEntity.setContact2(new Contact(forward_contact_2.split(",")[0], forward_contact_2.split(",")[1]));
+                }
+                caseList.add(caseEntity);
+            }
         }
-        BoardAdapter boardAdapter = new BoardAdapter(this, caseList);
-        boardRecyclerview.setAdapter(boardAdapter);
+        return caseList;
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.floatingActionButton) {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, EditActivity.class));
         }
     }
 

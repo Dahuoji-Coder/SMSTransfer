@@ -37,12 +37,13 @@
                 android:textSize="15sp" />
 
             <EditText
+                android:id="@+id/filtersPhoneNumberInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:hint="请输入"
                 android:importantForAutofill="no"
-                android:inputType="number"
+                android:inputType="phone"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="15sp" />
@@ -64,12 +65,13 @@
                 android:textSize="15sp" />
 
             <EditText
+                android:id="@+id/filtersKeyword1Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:hint="请输入"
                 android:importantForAutofill="no"
-                android:inputType="number"
+                android:inputType="text"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="15sp" />
@@ -91,12 +93,13 @@
                 android:textSize="15sp" />
 
             <EditText
+                android:id="@+id/filtersKeyword2Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:hint="请输入"
                 android:importantForAutofill="no"
-                android:inputType="number"
+                android:inputType="text"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="15sp" />
@@ -135,24 +138,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="联系人"
+                android:text="联系人1"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/phoneNumber1TextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_weight="1"
                 android:hint="请选择"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="15sp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:gravity="right"
                 android:hint=">"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
@@ -173,24 +177,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="联系人"
+                android:text="联系人2"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/phoneNumber2TextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_weight="1"
                 android:hint="请选择"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="15sp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:gravity="right"
                 android:hint=">"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"

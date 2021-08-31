@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +46,39 @@ public class BoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
         holder = (BoardViewHolder) holder;
+        CaseEntity caseEntity = caseList.get(position);
+        StringBuilder filtersStr = new StringBuilder();
+        if (!TextUtils.isEmpty(caseEntity.getFiltersPhoneNumber())) {
+            filtersStr.append(caseEntity.getFiltersPhoneNumber()).append(" | ");
+        }
+        if (!TextUtils.isEmpty(caseEntity.getFiltersKeyword1())) {
+            filtersStr.append(caseEntity.getFiltersKeyword1()).append(" | ");
+        }
+        if (!TextUtils.isEmpty(caseEntity.getFiltersKeyword2())) {
+            filtersStr.append(caseEntity.getFiltersKeyword2()).append(" | ");
+        }
+        if (filtersStr.length() > 0) {
+            ((BoardViewHolder) holder).filtersTextView.setText(filtersStr.substring(0, filtersStr.length() - 3));
+        } else {
+            ((BoardViewHolder) holder).filtersTextView.setText("转发所有信息");
+        }
+        StringBuilder forwardStr = new StringBuilder();
+        if (caseEntity.getContact1() != null) {
+            forwardStr.append(caseEntity.getContact1().getName() + " (" + caseEntity.getContact1().getPhoneNumber() + ")");
+            if (caseEntity.getContact2() != null) {
+                forwardStr.append("\n").append(caseEntity.getContact2().getName() + " (" + caseEntity.getContact2().getPhoneNumber() + ")");
+            }
+        }
+        if (forwardStr.length() > 0) {
+            ((BoardViewHolder) holder).transferTextView.setText(forwardStr);
+        } else {
+            ((BoardViewHolder) holder).transferTextView.setText("无转发人");
+        }
+        if (caseEntity.isShowButtons()) {
+            ((BoardViewHolder) holder).buttonsLayout.setVisibility(View.VISIBLE);
+        } else {
+            ((BoardViewHolder) holder).buttonsLayout.setVisibility(View.GONE);
+        }
         ListActivity.setAlphaChange(((BoardViewHolder) holder).contentLayout, ((BoardViewHolder) holder).buttonEdit, ((BoardViewHolder) holder).buttonDelete);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((BoardViewHolder) holder).itemBoardRoot.setClipToOutline(true);
@@ -56,6 +91,7 @@ public class BoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Log.d(">>>BoardAdapter", "=== on long click root");
                 if (((BoardViewHolder) finalHolder).buttonsLayout.getVisibility() == View.GONE) {
                     ((BoardViewHolder) finalHolder).buttonsLayout.setVisibility(View.VISIBLE);
+                    caseEntity.setShowButtons(true);
                 }
                 return true;
             }
@@ -69,12 +105,13 @@ public class BoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((BoardViewHolder) holder).buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, MainActivity.class));
+                onBoardEventListener.onButtonEditClicked(caseEntity);
             }
         });
         ((BoardViewHolder) holder).buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onBoardEventListener.onButtonDeleteClicked(caseEntity);
                 Log.d(">>>BoardAdapter", "=== on click delete button");
             }
         });
@@ -91,6 +128,8 @@ public class BoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public final LinearLayout buttonsLayout;
         public final ImageView buttonEdit;
         public final ImageView buttonDelete;
+        public final TextView filtersTextView;
+        public final TextView transferTextView;
 
         public BoardViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -99,6 +138,20 @@ public class BoardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             buttonsLayout = itemView.findViewById(R.id.buttonsLayout);
             buttonEdit = itemView.findViewById(R.id.buttonEdit);
             buttonDelete = itemView.findViewById(R.id.buttonDelete);
+            filtersTextView = itemView.findViewById(R.id.filtersTextView);
+            transferTextView = itemView.findViewById(R.id.transferTextView);
         }
+    }
+
+    private OnBoardEventListener onBoardEventListener;
+
+    public void setOnBoardEventListener(OnBoardEventListener onBoardEventListener) {
+        this.onBoardEventListener = onBoardEventListener;
+    }
+
+    public interface OnBoardEventListener {
+        void onButtonEditClicked(CaseEntity caseEntity);
+
+        void onButtonDeleteClicked(CaseEntity caseEntity);
     }
 }
