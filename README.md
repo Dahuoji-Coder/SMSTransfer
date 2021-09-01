@@ -12,7 +12,7 @@
 
 应用下载链接：<br>
 
-https://github.com/Dahuoji-Coder/SMSTransfer/blob/main/app/build/outputs/apk/debug/app-debug.apk
+https://github.com/Dahuoji-Coder/SMSTransfer/raw/main/app/build/outputs/apk/debug/app-debug.apk
 
 
 
